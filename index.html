@@ -242,6 +242,7 @@ async function init(){
   const { data:{ session:s } } = await sb.auth.getSession();
   session = s;
   sb.auth.onAuthStateChange((_evt, s2)=>{ session=s2; syncAuth(); });
+  if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname+location.search);
   syncAuth();
 }
 function syncAuth(){
@@ -256,7 +257,7 @@ async function sendLink(){
   const email=$("email").value.trim();
   if(!email){ authStatus("Enter your email first.",true); return; }
   authStatus("Sending…");
-  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin } });
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname } });
   if(error) authStatus(error.message,true);
   else authStatus("Check your inbox for the login link ✓");
 }
