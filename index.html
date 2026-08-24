@@ -30,7 +30,17 @@
   #auth input:focus{border-color:var(--marigold);box-shadow:0 0 0 3px var(--marigold-soft)}
   #auth button{width:100%;margin-top:10px;background:var(--marigold);color:#fff;font-weight:700;
     border:none;border-radius:10px;padding:13px;font-size:15px;cursor:pointer}
+  .gbtn{width:100%;background:#fff !important;border:1px solid var(--line) !important;color:var(--ink) !important;
+    font-weight:600 !important;border-radius:10px;padding:12px !important;font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:9px;margin-top:0 !important}
+  .gbtn:hover{border-color:var(--marigold) !important}
+  .gbtn svg{width:18px;height:18px}
+  .ordiv{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;margin:16px 0 12px}
+  .ordiv::before,.ordiv::after{content:"";flex:1;height:1px;background:var(--line)}
   #authStatus{min-height:18px;font-size:13px;margin-top:12px;color:var(--muted)}
+  .toggle{font-size:13px;color:var(--muted);margin-top:16px}
+  #auth button.linklike{display:inline;width:auto;margin:0;padding:0;background:none;border:none;
+    color:var(--marigold);font-weight:700;font-size:13px;cursor:pointer}
 
   .tabs{display:flex;gap:6px;margin:4px 0 16px;background:#F1EADB;padding:4px;border-radius:12px}
   .tab{flex:1;text-align:center;padding:9px 4px;border:none;border-radius:9px;font:inherit;
@@ -116,9 +126,11 @@
 <!-- ===== login screen ===== -->
 <div id="auth" hidden>
   <div class="logo">Bol<span style="color:var(--marigold)">chaal</span></div>
-  <p>Sign in to reach your phrases on any device.</p>
+  <p id="authSub">Sign in to reach your phrases on any device.</p>
   <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
-  <button id="sendLink">Email me a login link</button>
+  <input id="password" type="password" placeholder="Password" autocomplete="current-password" style="margin-top:10px">
+  <button id="primaryAuth">Sign in</button>
+  <div class="toggle">New here? <button id="toggleMode" class="linklike">Create an account</button></div>
   <div id="authStatus"></div>
 </div>
 
@@ -242,24 +254,49 @@ async function init(){
   const { data:{ session:s } } = await sb.auth.getSession();
   session = s;
   sb.auth.onAuthStateChange((_evt, s2)=>{ session=s2; syncAuth(); });
-  if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname+location.search);
   syncAuth();
 }
 function syncAuth(){
   if(session){
+    if(location.hash.includes("access_token")||location.search.includes("code="))
+      history.replaceState(null,"",location.pathname);
     $("auth").hidden=true; $("app").hidden=false;
     if(!appLoaded){ appLoaded=true; loadAll(); }
   }else{
     appLoaded=false; $("app").hidden=true; $("auth").hidden=false;
+    authMode="signin";
+    if($("primaryAuth")){
+      $("primaryAuth").textContent="Sign in";
+      $("toggleMode").textContent="Create an account";
+      $("authSub").textContent="Sign in to reach your phrases on any device.";
+      $("password").value="";
+    }
   }
 }
-async function sendLink(){
-  const email=$("email").value.trim();
-  if(!email){ authStatus("Enter your email first.",true); return; }
-  authStatus("Sending…");
-  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname } });
-  if(error) authStatus(error.message,true);
-  else authStatus("Check your inbox for the login link ✓");
+async function signInGoogle(){} // (removed)
+let authMode="signin";
+function toggleMode(){
+  authMode = authMode==="signin" ? "signup" : "signin";
+  $("primaryAuth").textContent = authMode==="signin" ? "Sign in" : "Create account";
+  $("authSub").textContent = authMode==="signin"
+    ? "Sign in to reach your phrases on any device."
+    : "Create an account — just an email and password.";
+  $("toggleMode").textContent = authMode==="signin" ? "Create an account" : "Sign in instead";
+  $("password").setAttribute("autocomplete", authMode==="signin"?"current-password":"new-password");
+  authStatus("");
+}
+async function doAuth(){
+  const email=$("email").value.trim(), pw=$("password").value;
+  if(!email||!pw){ authStatus("Enter your email and password.",true); return; }
+  if(pw.length<6){ authStatus("Password must be at least 6 characters.",true); return; }
+  authStatus("Working…");
+  const res = authMode==="signup"
+    ? await sb.auth.signUp({ email, password:pw })
+    : await sb.auth.signInWithPassword({ email, password:pw });
+  if(res.error){ authStatus(res.error.message,true); return; }
+  if(authMode==="signup" && !res.data.session)
+    authStatus("Account created — confirm via the email we sent, then sign in.");
+  // when a session is returned, onAuthStateChange reveals the app
 }
 async function signOut(){ await sb.auth.signOut(); }
 
@@ -432,8 +469,10 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchTo(t.dataset.ta
 $("add").onclick=submit;
 $("cancel").onclick=cancelEdit;
 $("search").oninput=render;
-$("sendLink").onclick=sendLink;
-$("email").addEventListener("keydown",e=>{ if(e.key==="Enter") sendLink(); });
+$("primaryAuth").onclick=doAuth;
+$("toggleMode").onclick=toggleMode;
+$("password").addEventListener("keydown",e=>{ if(e.key==="Enter") doAuth(); });
+$("email").addEventListener("keydown",e=>{ if(e.key==="Enter") doAuth(); });
 $("signout").onclick=signOut;
 init();
 </script>
