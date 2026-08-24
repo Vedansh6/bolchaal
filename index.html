@@ -1,0 +1,438 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolchaal — Phrases & Grammar</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --paper:#FBF8F1; --ink:#211E1A; --muted:#77706A;
+    --line:#E4DCCC; --card:#FFFFFF; --marigold:#E2860F;
+    --marigold-soft:#FBEBD1; --danger:#B23A2E; --good:#2E7D57;
+    --shadow:0 1px 2px rgba(33,30,26,.06),0 8px 24px rgba(33,30,26,.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 64px}
+  header{padding:8px 2px 14px;display:flex;justify-content:space-between;align-items:flex-start}
+  .logo{font-size:26px;font-weight:800;letter-spacing:-.5px}
+  .tagline{color:var(--muted);font-size:13.5px;margin-top:2px}
+  .signout{background:transparent;border:1px solid var(--line);color:var(--muted);
+    font-size:12.5px;font-weight:600;padding:6px 11px;border-radius:9px;cursor:pointer}
+  .signout:hover{border-color:var(--marigold);color:var(--ink)}
+
+  /* auth screen */
+  #auth{max-width:400px;margin:56px auto;padding:0 20px;text-align:center}
+  #auth .logo{font-size:30px;margin-bottom:6px}
+  #auth p{color:var(--muted);font-size:14px;margin:0 0 22px}
+  #auth input{width:100%;font:inherit;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:13px 12px;outline:none;text-align:center;font-size:15px}
+  #auth input:focus{border-color:var(--marigold);box-shadow:0 0 0 3px var(--marigold-soft)}
+  #auth button{width:100%;margin-top:10px;background:var(--marigold);color:#fff;font-weight:700;
+    border:none;border-radius:10px;padding:13px;font-size:15px;cursor:pointer}
+  #authStatus{min-height:18px;font-size:13px;margin-top:12px;color:var(--muted)}
+
+  .tabs{display:flex;gap:6px;margin:4px 0 16px;background:#F1EADB;padding:4px;border-radius:12px}
+  .tab{flex:1;text-align:center;padding:9px 4px;border:none;border-radius:9px;font:inherit;
+    font-weight:600;font-size:13px;color:var(--muted);background:transparent;cursor:pointer;white-space:nowrap}
+  .tab.on{background:#fff;color:var(--ink);box-shadow:var(--shadow)}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    box-shadow:var(--shadow);padding:14px;margin-bottom:16px;transition:border-color .2s}
+  .panel.editing{border-color:var(--marigold);box-shadow:0 0 0 3px var(--marigold-soft),var(--shadow)}
+  .panel-head{font-size:13px;font-weight:700;color:var(--marigold);
+    letter-spacing:.04em;margin:-2px 2px 10px;display:none}
+  .panel.editing .panel-head{display:block}
+  label{display:block;font-size:12px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.06em;margin:0 0 5px 2px}
+  input,textarea{width:100%;font:inherit;color:var(--ink);background:#FDFCF9;
+    border:1px solid var(--line);border-radius:10px;padding:11px 12px;outline:none;
+    transition:border-color .15s,box-shadow .15s}
+  input:focus,textarea:focus{border-color:var(--marigold);box-shadow:0 0 0 3px var(--marigold-soft)}
+  textarea{resize:vertical;min-height:44px}
+  .field{margin-bottom:11px}
+  .big{font-size:18px}
+  .btnrow{display:flex;gap:9px}
+  button{font:inherit;cursor:pointer;border:none;border-radius:10px}
+  .primary{background:var(--marigold);color:#fff;font-weight:700;padding:12px 16px;flex:1;font-size:15px}
+  .primary:active{transform:translateY(1px)}
+  .cancel{background:#F0EBDF;color:var(--ink);font-weight:600;padding:12px 16px}
+  .ghost{background:transparent;color:var(--muted);padding:7px 10px;font-size:13px}
+  .ghost:hover{color:var(--ink)}
+
+  .tagpicker{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+  .tagpick{background:#FDFCF9;border:1px solid var(--line);color:var(--muted);
+    font-size:12.5px;font-weight:600;border-radius:999px;padding:6px 12px;transition:.12s;
+    display:inline-flex;align-items:center;gap:5px}
+  .tagpick:hover{border-color:var(--marigold)}
+  .tagpick.on{background:var(--marigold);border-color:var(--marigold);color:#fff}
+  .tagpick .x{opacity:.55;font-weight:700;font-size:13px;line-height:1}
+  .tagpick .x:hover{opacity:1}
+  .tagadd{border-style:dashed;color:var(--marigold);border-color:var(--marigold)}
+  .tagadd-input{width:120px !important;padding:5px 10px !important;font-size:12.5px !important;border-radius:999px !important}
+
+  .searchbar{position:relative;margin:14px 0 12px}
+  .searchbar input{padding-left:38px;font-size:15px}
+  .searchbar svg{position:absolute;left:12px;top:12px;opacity:.45}
+
+  .meta{display:flex;justify-content:space-between;align-items:center;
+    margin:0 4px 10px;font-size:13px;color:var(--muted);flex-wrap:wrap;gap:6px}
+  .count{font-weight:600;color:var(--ink)}
+  .activefilter{display:inline-flex;align-items:center;gap:5px;background:var(--marigold);
+    color:#fff;border-radius:999px;padding:3px 6px 3px 11px;font-size:12.5px;font-weight:600}
+  .activefilter button{background:rgba(255,255,255,.25);color:#fff;width:18px;height:18px;
+    line-height:1;padding:0;font-size:14px;border-radius:50%}
+
+  .entry{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);padding:0 14px 12px;margin-bottom:11px;border-top:3px solid var(--marigold)}
+  .line-strong{font-size:20px;font-weight:600;line-height:1.35;padding-top:12px}
+  .line-soft{font-size:15.5px;color:#3a352f;margin-top:7px;line-height:1.4}
+  .line-bad{font-size:15.5px;color:var(--danger);text-decoration:line-through;
+    text-decoration-color:rgba(178,58,46,.45);padding-top:12px;line-height:1.4}
+  .line-good{font-size:16.5px;font-weight:600;color:var(--good);margin-top:8px;line-height:1.4}
+  .pfx{font-weight:700;margin-right:2px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .chip{background:var(--marigold-soft);color:#9a5c05;font-size:12px;font-weight:600;
+    border-radius:999px;padding:3px 10px;cursor:pointer}
+  .chip:hover{background:#F6DCA9}
+  .foot{display:flex;justify-content:flex-end;gap:2px;margin-top:8px}
+  .foot .del{color:var(--danger)}
+  .counter{display:inline-flex;align-items:center;gap:9px;margin-top:11px;
+    background:#FDFCF9;border:1px solid var(--line);border-radius:999px;padding:4px 6px}
+  .counter .clab{font-size:11px;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.06em;font-weight:600;padding-left:8px}
+  .cbtn{width:30px;height:30px;border-radius:50%;background:var(--marigold-soft);color:#9a5c05;
+    font-size:18px;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center}
+  .cbtn:active{transform:scale(.94)}
+  .cnt{min-width:24px;text-align:center;font-weight:800;font-size:17px}
+  mark{background:var(--marigold-soft);color:inherit;border-radius:3px;padding:0 1px}
+
+  .empty{text-align:center;color:var(--muted);padding:34px 16px;
+    border:1px dashed var(--line);border-radius:14px;font-size:14.5px}
+  .empty b{color:var(--ink)}
+  .status{font-size:12.5px;color:var(--muted);min-height:16px;margin:10px 4px 0}
+</style>
+
+<!-- ===== login screen ===== -->
+<div id="auth" hidden>
+  <div class="logo">Bol<span style="color:var(--marigold)">chaal</span></div>
+  <p>Sign in to reach your phrases on any device.</p>
+  <input id="email" type="email" placeholder="you@example.com" autocomplete="email">
+  <button id="sendLink">Email me a login link</button>
+  <div id="authStatus"></div>
+</div>
+
+<!-- ===== app ===== -->
+<div class="wrap" id="app" hidden>
+  <header>
+    <div>
+      <div class="logo">Bol<span style="color:var(--marigold)">chaal</span></div>
+      <div class="tagline">Your repository of phrases and grammar fixes</div>
+    </div>
+    <button class="signout" id="signout">Sign out</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="phrases">Phrases</button>
+    <button class="tab" data-tab="grammar">Grammar</button>
+    <button class="tab" data-tab="vocabulary">Vocab</button>
+    <button class="tab" data-tab="mistakes">Mistakes</button>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="panel-head">Editing</div>
+    <div id="formFields"></div>
+    <div class="field">
+      <label>Tags <span style="text-transform:none;font-weight:400">— tap to select, “+ Add” to create your own</span></label>
+      <div class="tagpicker" id="tagpicker"></div>
+    </div>
+    <div class="btnrow">
+      <button class="primary" id="add">Add</button>
+      <button class="cancel" id="cancel" style="display:none">Cancel</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="searchbar">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#211E1A"
+      stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="search" placeholder="Search…" autocomplete="off">
+  </div>
+
+  <div class="meta">
+    <span id="countLabel" class="count">0</span>
+    <span id="filterWrap"></span>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+// ================= CONFIG =================
+const SB_URL = "https://plagjlxotaobkyrfkosd.supabase.co";
+const SB_KEY = "sb_publishable_wKo5JKxKO8lRBSJh8diT8Q_oogmyzSK";
+
+const SECTIONS = {
+  phrases:{
+    fa:"field_a", fb:"field_b",
+    a:{label:'Hindi phrase <span style="text-transform:none;font-weight:400">(in English script)</span>', ph:"aapka din shubh ho", cls:"big"},
+    b:{label:"English meaning", ph:"Have a good day", area:true},
+    rowA:{cls:"line-strong"}, rowB:{cls:"line-soft"},
+    builtin:["Greetings","Everyday","Travel","Shopping","Food","Work","Family",
+      "Directions","Emergency","Polite/Formal","Casual","Questions","Requests","Idioms"],
+    search:"Search Hindi, English or tags…", addLabel:"Add to repository", unit:"phrase"
+  },
+  grammar:{
+    fa:"field_a", fb:"field_b",
+    a:{label:"Weaker sentence", ph:"He go to school everyday", area:true},
+    b:{label:"Improved sentence", ph:"He goes to school every day", area:true},
+    rowA:{cls:"line-bad", pfx:"✕"}, rowB:{cls:"line-good", pfx:"✓"},
+    builtin:["Subject–verb agreement","Tense","Articles","Prepositions","Word order",
+      "Pluralization","Punctuation","Spelling","Wordiness","Passive voice","Pronoun","Run-on/Fragment"],
+    search:"Search sentences or mistake tags…", addLabel:"Add correction", unit:"correction"
+  },
+  vocabulary:{
+    fa:"field_a", fb:"field_b",
+    a:{label:"English word", ph:"serendipity", cls:"big"},
+    b:{label:'Meaning <span style="text-transform:none;font-weight:400">(add an example if you like)</span>', ph:"a pleasant surprise found by chance", area:true},
+    rowA:{cls:"line-strong"}, rowB:{cls:"line-soft"},
+    builtin:["Noun","Verb","Adjective","Adverb","Formal","Informal",
+      "Business","Academic","Everyday","Idiomatic","Phrasal verb","Advanced"],
+    search:"Search words, meanings or tags…", addLabel:"Add word", unit:"word"
+  },
+  mistakes:{
+    fa:"field_a", fb:"field_b",
+    a:{label:"Mistake you make", ph:"Saying 'less' for countable things", area:true},
+    b:{label:'How to fix / note <span style="text-transform:none;font-weight:400">(optional)</span>', ph:"Use 'fewer' — fewer cars, less water", area:true, optional:true},
+    rowA:{cls:"line-strong"}, rowB:{cls:"line-soft"},
+    builtin:["Grammar","Vocabulary","Pronunciation","Spelling","Speaking","Writing","Habit"],
+    search:"Search mistakes, notes or tags…", addLabel:"Log mistake", unit:"mistake",
+    counter:true, sortByCount:true
+  }
+};
+
+const $ = id => document.getElementById(id);
+let cur = "phrases";
+const state = {};
+Object.keys(SECTIONS).forEach(k => state[k] = {entries:[], userTags:[]});
+let editingId=null, activeTag=null, selectedTags=new Set();
+let sb=null, session=null, appLoaded=false;
+
+const C = ()=>SECTIONS[cur];
+const S = ()=>state[cur];
+function has(list,t){ return list.some(x=>x.toLowerCase()===t.toLowerCase()); }
+function allTags(){ return [...C().builtin, ...S().userTags.filter(t=>!has(C().builtin,t))]; }
+function parseTags(str){ return str.split(",").map(t=>t.trim()).filter(Boolean); }
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function hl(text,q){
+  const safe=esc(text); if(!q) return safe;
+  const i=safe.toLowerCase().indexOf(q.toLowerCase()); if(i<0) return safe;
+  return safe.slice(0,i)+"<mark>"+safe.slice(i,i+q.length)+"</mark>"+safe.slice(i+q.length);
+}
+function setStatus(msg,err){
+  const s=$("status"); s.textContent=msg||"";
+  s.style.color=err?"var(--danger)":"var(--muted)";
+  if(msg&&!err) setTimeout(()=>{ if(s.textContent===msg) s.textContent=""; },2200);
+}
+function authStatus(msg,err){ const s=$("authStatus"); s.textContent=msg||""; s.style.color=err?"var(--danger)":"var(--good)"; }
+
+// ================= AUTH =================
+async function init(){
+  sb = window.supabase.createClient(SB_URL, SB_KEY);
+  const { data:{ session:s } } = await sb.auth.getSession();
+  session = s;
+  sb.auth.onAuthStateChange((_evt, s2)=>{ session=s2; syncAuth(); });
+  syncAuth();
+}
+function syncAuth(){
+  if(session){
+    $("auth").hidden=true; $("app").hidden=false;
+    if(!appLoaded){ appLoaded=true; loadAll(); }
+  }else{
+    appLoaded=false; $("app").hidden=true; $("auth").hidden=false;
+  }
+}
+async function sendLink(){
+  const email=$("email").value.trim();
+  if(!email){ authStatus("Enter your email first.",true); return; }
+  authStatus("Sending…");
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin } });
+  if(error) authStatus(error.message,true);
+  else authStatus("Check your inbox for the login link ✓");
+}
+async function signOut(){ await sb.auth.signOut(); }
+
+// ================= DATA (Supabase) =================
+async function loadAll(){
+  Object.keys(SECTIONS).forEach(k=>{ state[k].entries=[]; state[k].userTags=[]; });
+  const { data:rows, error } = await sb.from("entries").select("*").order("created_at",{ascending:true});
+  if(error){ setStatus("Load failed: "+error.message,true); }
+  (rows||[]).forEach(r=>{ if(state[r.section]) state[r.section].entries.push(r); });
+  const { data:tagRows } = await sb.from("user_tags").select("section,tag");
+  (tagRows||[]).forEach(t=>{ if(state[t.section]) state[t.section].userTags.push(t.tag); });
+  // surface any tag used on an entry but not in builtin/user list
+  Object.keys(SECTIONS).forEach(k=>{
+    const b=SECTIONS[k].builtin, st=state[k];
+    st.entries.forEach(e=>(e.tags||[]).forEach(t=>{
+      if(!b.some(x=>x.toLowerCase()===t.toLowerCase())&&!st.userTags.some(x=>x.toLowerCase()===t.toLowerCase()))
+        st.userTags.push(t);
+    }));
+  });
+  switchTo("phrases");
+}
+
+// ================= form =================
+function fieldHTML(id,f){
+  const input=f.area
+    ? `<textarea id="${id}" placeholder="${esc(f.ph)}"></textarea>`
+    : `<input id="${id}" class="${f.cls||''}" placeholder="${esc(f.ph)}" autocomplete="off">`;
+  return `<div class="field"><label>${f.label}</label>${input}</div>`;
+}
+function renderForm(){ $("formFields").innerHTML = fieldHTML("fieldA",C().a)+fieldHTML("fieldB",C().b); }
+
+// ================= tag picker =================
+function renderPicker(){
+  const chips=allTags().map(t=>{
+    const custom=!has(C().builtin,t);
+    return `<button type="button" class="tagpick${selectedTags.has(t)?' on':''}" data-tag="${esc(t)}">`
+      +`<span class="lbl">${esc(t)}</span>`
+      +(custom?`<span class="x" data-del="${esc(t)}" title="Remove tag">×</span>`:"")+`</button>`;
+  }).join("");
+  $("tagpicker").innerHTML=chips+`<button type="button" class="tagpick tagadd" id="addTagBtn">+ Add</button>`;
+  $("tagpicker").querySelectorAll(".tagpick").forEach(b=>{
+    if(b.id==="addTagBtn") return;
+    b.querySelector(".lbl").onclick=()=>{ const t=b.dataset.tag;
+      selectedTags.has(t)?selectedTags.delete(t):selectedTags.add(t); b.classList.toggle("on"); };
+    const x=b.querySelector(".x"); if(x) x.onclick=e=>{ e.stopPropagation(); deleteUserTag(x.dataset.del); };
+  });
+  $("addTagBtn").onclick=showTagInput;
+}
+function showTagInput(){
+  const btn=$("addTagBtn"); const inp=document.createElement("input");
+  inp.className="tagadd-input"; inp.placeholder="new tag"; inp.autocomplete="off";
+  btn.replaceWith(inp); inp.focus();
+  inp.addEventListener("keydown",e=>{ if(e.key==="Enter"){e.preventDefault();addNewTags(inp.value);} else if(e.key==="Escape") renderPicker(); });
+  inp.addEventListener("blur",()=>{ inp.value.trim()?addNewTags(inp.value):renderPicker(); });
+}
+async function addNewTags(str){
+  const uid=session.user.id, rows=[];
+  parseTags(str).forEach(t=>{
+    if(!has(C().builtin,t)&&!has(S().userTags,t)){ S().userTags.push(t); rows.push({user_id:uid,section:cur,tag:t}); }
+    selectedTags.add(allTags().find(x=>x.toLowerCase()===t.toLowerCase())||t);
+  });
+  renderPicker();
+  if(rows.length){ const {error}=await sb.from("user_tags").upsert(rows,{onConflict:"user_id,section,tag"}); if(error) setStatus("Tag save failed: "+error.message,true); }
+}
+async function deleteUserTag(t){
+  S().userTags=S().userTags.filter(x=>x.toLowerCase()!==t.toLowerCase());
+  selectedTags.delete(t); renderPicker();
+  const {error}=await sb.from("user_tags").delete().eq("section",cur).eq("tag",t);
+  if(error) setStatus("Tag delete failed: "+error.message,true);
+}
+const collectTags=()=>[...selectedTags];
+
+// ================= list =================
+function render(){
+  const q=$("search").value.trim(), c=C(), e0=S().entries;
+  $("filterWrap").innerHTML=activeTag
+    ? `<span class="activefilter">#${esc(activeTag)} <button id="clearTag" title="Clear tag">×</button></span>`:"";
+  if(activeTag) $("clearTag").onclick=()=>{ activeTag=null; render(); };
+
+  let shown=e0.slice();
+  if(activeTag) shown=shown.filter(e=>(e.tags||[]).includes(activeTag));
+  if(q) shown=shown.filter(e=>((e[c.fa]||"")+" "+(e[c.fb]||"")+" "+(e.tags||[]).join(" ")).toLowerCase().includes(q.toLowerCase()));
+
+  $("countLabel").textContent=(q||activeTag)?shown.length+" of "+e0.length+" match":e0.length+" "+c.unit+(e0.length===1?"":"s");
+
+  const list=$("list");
+  if(e0.length===0){ list.innerHTML=`<div class="empty"><b>Nothing saved yet.</b><br>Add your first ${c.unit} above.</div>`; return; }
+  if(shown.length===0){ list.innerHTML='<div class="empty">No entry matches your filter.</div>'; return; }
+
+  let ordered=shown.slice();
+  if(c.sortByCount) ordered.sort((x,y)=>(y.count||0)-(x.count||0));
+  else ordered.reverse();
+
+  list.innerHTML=ordered.map(e=>`
+    <div class="entry">
+      <div class="${c.rowA.cls}">${c.rowA.pfx?`<span class="pfx">${c.rowA.pfx}</span>`:""}${hl(e[c.fa]||"",q)}</div>
+      ${e[c.fb]?`<div class="${c.rowB.cls}">${c.rowB.pfx?`<span class="pfx">${c.rowB.pfx}</span>`:""}${hl(e[c.fb],q)}</div>`:""}
+      ${c.counter?`<div class="counter"><span class="clab">Count</span><button class="cbtn dec" data-id="${e.id}">−</button><span class="cnt">${e.count||0}</span><button class="cbtn inc" data-id="${e.id}">+</button></div>`:""}
+      ${(e.tags&&e.tags.length)?`<div class="chips">${e.tags.map(t=>`<span class="chip" data-tag="${esc(t)}">${hl(t,q)}</span>`).join("")}</div>`:""}
+      <div class="foot">
+        <button class="ghost edit" data-id="${e.id}">Edit</button>
+        <button class="ghost del" data-id="${e.id}">Delete</button>
+      </div>
+    </div>`).join("");
+  list.querySelectorAll(".del").forEach(b=>b.onclick=()=>remove(b.dataset.id));
+  list.querySelectorAll(".edit").forEach(b=>b.onclick=()=>startEdit(b.dataset.id));
+  list.querySelectorAll(".chip").forEach(x=>x.onclick=()=>{ activeTag=x.dataset.tag; render(); });
+  list.querySelectorAll(".inc").forEach(b=>b.onclick=()=>bump(b.dataset.id,1));
+  list.querySelectorAll(".dec").forEach(b=>b.onclick=()=>bump(b.dataset.id,-1));
+}
+
+function startEdit(id){
+  const c=C(), e=S().entries.find(x=>x.id===id); if(!e) return;
+  editingId=id; $("fieldA").value=e[c.fa]||""; $("fieldB").value=e[c.fb]||"";
+  const tags=e.tags||[];
+  tags.forEach(t=>{ if(!has(c.builtin,t)&&!has(S().userTags,t)) S().userTags.push(t); });
+  selectedTags=new Set(tags); renderPicker();
+  $("add").textContent="Save changes"; $("cancel").style.display="block";
+  $("panel").classList.add("editing"); window.scrollTo({top:0,behavior:"smooth"}); $("fieldA").focus();
+}
+function resetForm(){
+  editingId=null; if($("fieldA")) $("fieldA").value=""; if($("fieldB")) $("fieldB").value="";
+  selectedTags=new Set(); renderPicker();
+  $("add").textContent=C().addLabel; $("cancel").style.display="none"; $("panel").classList.remove("editing");
+}
+function cancelEdit(){ resetForm(); setStatus(""); }
+
+async function submit(){
+  const c=C(), a=$("fieldA").value.trim(), b=$("fieldB").value.trim(), tags=collectTags();
+  if(!a){ setStatus(c.counter?"Please enter the mistake.":"Please fill in the first field.",true); return; }
+  if(!c.b.optional && !b){ setStatus("Please fill in both fields.",true); return; }
+  if(editingId){
+    const e=S().entries.find(x=>x.id===editingId);
+    const { error } = await sb.from("entries").update({field_a:a, field_b:b||null, tags}).eq("id",editingId);
+    if(error){ setStatus("Save failed: "+error.message,true); return; }
+    if(e){ e.field_a=a; e.field_b=b; e.tags=tags; }
+    resetForm(); render(); setStatus("Saved ✓");
+  }else{
+    const row={ user_id:session.user.id, section:cur, field_a:a, field_b:b||null, tags, count: c.counter?1:0 };
+    const { data, error } = await sb.from("entries").insert(row).select().single();
+    if(error){ setStatus("Add failed: "+error.message,true); return; }
+    S().entries.push(data);
+    resetForm(); $("fieldA").focus(); render(); setStatus("Added ✓");
+  }
+}
+async function remove(id){
+  if(editingId===id) cancelEdit();
+  const { error } = await sb.from("entries").delete().eq("id",id);
+  if(error){ setStatus("Delete failed: "+error.message,true); return; }
+  S().entries=S().entries.filter(e=>e.id!==id); render();
+}
+async function bump(id,d){
+  const e=S().entries.find(x=>x.id===id); if(!e) return;
+  const nc=Math.max(0,(e.count||0)+d);
+  const { error } = await sb.from("entries").update({count:nc}).eq("id",id);
+  if(error){ setStatus("Update failed: "+error.message,true); return; }
+  e.count=nc; render();
+}
+
+// ================= tabs =================
+function switchTo(key){
+  cur=key; editingId=null; activeTag=null; selectedTags=new Set();
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===key));
+  $("search").value=""; $("search").placeholder=C().search;
+  renderForm(); resetForm(); render();
+}
+
+// ================= wire up =================
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchTo(t.dataset.tab));
+$("add").onclick=submit;
+$("cancel").onclick=cancelEdit;
+$("search").oninput=render;
+$("sendLink").onclick=sendLink;
+$("email").addEventListener("keydown",e=>{ if(e.key==="Enter") sendLink(); });
+$("signout").onclick=signOut;
+init();
+</script>
