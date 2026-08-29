@@ -121,6 +121,70 @@
     border:1px dashed var(--line);border-radius:14px;font-size:14.5px}
   .empty b{color:var(--ink)}
   .status{font-size:12.5px;color:var(--muted);min-height:16px;margin:10px 4px 0}
+
+  /* ================= tracker (scoped) ================= */
+  #trackerView{--tbg:#fafaf9;--tcard:#fff;--tink:#171717;--tsub:#737373;--tmut:#a3a3a3;
+    --tline:#e5e5e5;--tline2:#f5f5f4;--tacc:#4f46e5;--tok:#059669;--tokbg:#ecfdf5;--tokln:#a7f3d0;
+    --tbad:#dc2626;--tbadbg:#fef2f2;--tbadln:#fecaca;color:var(--tink)}
+  #trackerView .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  #trackerView .thead{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+  #trackerView .nav{width:36px;height:36px;border:1px solid var(--tline);background:var(--tcard);color:var(--tsub);border-radius:10px;font-size:20px;line-height:1;cursor:pointer}
+  #trackerView .nav:disabled{opacity:.3;cursor:default}
+  #trackerView .hdate{text-align:center}
+  #trackerView .hdate b{font-size:14px;font-weight:600}
+  #trackerView .hdate small{display:block;font-size:11px;color:var(--tmut)}
+  #trackerView .prog{display:flex;align-items:center;gap:16px;background:var(--tcard);border:1px solid var(--tline);border-radius:18px;padding:16px;margin:8px 0 20px}
+  #trackerView .pct{font-size:26px;font-weight:600}
+  #trackerView .lbl{font-size:12px;color:var(--tsub)}
+  #trackerView .stk{font-size:14px;margin-top:2px}
+  #trackerView .stk b{color:var(--tacc)}
+  #trackerView .reset{margin-left:auto;align-self:flex-start;background:none;border:none;color:var(--tmut);font-size:12px;text-decoration:underline;cursor:pointer}
+  #trackerView .sec{margin-bottom:20px}
+  #trackerView .sec-h{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px;margin-bottom:8px}
+  #trackerView .sec-h h2{margin:0;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tsub)}
+  #trackerView .tlist{background:var(--tcard);border:1px solid var(--tline);border-radius:18px;overflow:hidden}
+  #trackerView .trow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--tline2)}
+  #trackerView .trow:first-child{border-top:none}
+  #trackerView .trow.muted{opacity:.5}
+  #trackerView .chk{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;background:none;border:none;text-align:left;padding:0;font:inherit;color:inherit}
+  #trackerView .box{width:24px;height:24px;border-radius:7px;border:1px solid var(--tline);background:#fff;display:flex;align-items:center;justify-content:center;color:transparent;flex:0 0 auto;font-size:14px}
+  #trackerView .box.on{background:var(--tacc);border-color:var(--tacc);color:#fff}
+  #trackerView .nm{font-size:14px}
+  #trackerView .nm.done{color:var(--tmut);text-decoration:line-through}
+  #trackerView .pill{margin-left:auto;font-size:10px;font-family:ui-monospace,monospace;text-transform:uppercase;letter-spacing:.04em;color:var(--tacc);border:1px solid #e0e7ff;border-radius:5px;padding:2px 6px;white-space:nowrap}
+  #trackerView .pill.off{color:var(--tmut);border-color:var(--tline)}
+  #trackerView .cinfo{flex:1;min-width:0}
+  #trackerView .cinfo .nm{display:block}
+  #trackerView .crow{display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap}
+  #trackerView .cval{width:56px;padding:3px 6px;border-radius:6px;border:1px solid var(--tline);text-align:right;font-size:12px;font-family:ui-monospace,monospace}
+  #trackerView .cval.ok{border-color:var(--tokln);color:var(--tok);background:var(--tokbg)}
+  #trackerView .cval.bad{border-color:var(--tbadln);color:var(--tbad);background:var(--tbadbg)}
+  #trackerView .ctgt{font-size:12px;color:var(--tmut);font-family:ui-monospace,monospace}
+  #trackerView .cover{font-size:12px;color:var(--tbad);font-family:ui-monospace,monospace}
+  #trackerView .steps{display:flex;gap:6px;flex:0 0 auto}
+  #trackerView .st{width:32px;height:32px;border-radius:9px;border:1px solid var(--tline);background:#fff;color:var(--tsub);font-size:18px;line-height:1;cursor:pointer}
+  #trackerView .st.plus{background:var(--tacc);border-color:var(--tacc);color:#fff}
+  #trackerView .st.plus.hit{background:var(--tokbg);border-color:var(--tokln);color:var(--tok)}
+  #trackerView .addbtn{width:100%;padding:12px;border:1px dashed var(--tline);border-radius:18px;background:var(--tcard);color:var(--tsub);font-size:14px;cursor:pointer}
+  #trackerView .addbtn:hover{border-color:var(--tacc);color:var(--tacc)}
+  #trackerView .tpanel{background:var(--tcard);border:1px solid var(--tline);border-radius:18px;padding:16px}
+  #trackerView .tpanel h3{margin:0 0 12px;font-size:14px}
+  #trackerView .fld{width:100%;padding:8px 12px;border:1px solid var(--tline);border-radius:9px;font-size:14px;background:#fff;margin-bottom:10px}
+  #trackerView .frow{display:flex;gap:8px}
+  #trackerView .frow>*{flex:1}
+  #trackerView .flab{font-size:11px;color:var(--tsub);display:block;margin-bottom:2px}
+  #trackerView .tprimary{width:100%;padding:9px;border:none;border-radius:9px;background:var(--tacc);color:#fff;font-size:14px;font-weight:500;cursor:pointer}
+  #trackerView .tprimary:disabled{opacity:.4;cursor:default}
+  #trackerView .close{float:right;background:none;border:none;font-size:20px;color:var(--tmut);cursor:pointer;line-height:1}
+  #trackerView .clist{margin-top:14px;padding-top:12px;border-top:1px solid var(--tline2)}
+  #trackerView .clist .t{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tmut);margin-bottom:8px}
+  #trackerView .citem{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:2px 0}
+  #trackerView .citem small{color:var(--tmut);font-size:12px}
+  #trackerView .citem button{background:none;border:none;color:var(--tmut);font-size:12px;cursor:pointer}
+  #trackerView .citem button:hover{color:var(--tbad)}
+  #trackerView .thint{font-size:11px;color:var(--tmut);margin:-4px 0 10px}
+  #trackerView .tfoot{text-align:center;font-size:11px;color:var(--tline);margin-top:24px}
+  .tabs{overflow-x:auto}
 </style>
 
 <!-- ===== login screen ===== -->
@@ -149,8 +213,10 @@
     <button class="tab" data-tab="grammar">Grammar</button>
     <button class="tab" data-tab="vocabulary">Vocab</button>
     <button class="tab" data-tab="mistakes">Mistakes</button>
+    <button class="tab" data-tab="tracker">Tracker</button>
   </div>
 
+  <div id="pairView">
   <div class="panel" id="panel">
     <div class="panel-head">Editing</div>
     <div id="formFields"></div>
@@ -177,6 +243,9 @@
   </div>
 
   <div id="list"></div>
+  </div><!-- /pairView -->
+
+  <div id="trackerView" hidden></div>
 </div>
 
 <script>
@@ -263,7 +332,8 @@ function syncAuth(){
     $("auth").hidden=true; $("app").hidden=false;
     if(!appLoaded){ appLoaded=true; loadAll(); }
   }else{
-    appLoaded=false; $("app").hidden=true; $("auth").hidden=false;
+    appLoaded=false; trackerMounted=false; Tracker.reset();
+    $("app").hidden=true; $("auth").hidden=false;
     authMode="signin";
     if($("primaryAuth")){
       $("primaryAuth").textContent="Sign in";
@@ -456,10 +526,193 @@ async function bump(id,d){
   e.count=nc; render();
 }
 
+// ================= TRACKER (integrated, Supabase-backed, scoped) =================
+let trackerMounted=false;
+const Tracker=(function(){
+  const SECTIONS=[
+    {id:"supp",label:"Supplements",items:[
+      {id:"omega3",name:"Omega 3",type:"check"},{id:"b12",name:"B12",type:"check",cadence:"alt"},
+      {id:"mag",name:"Magnesium",type:"check"},{id:"d3",name:"D3",type:"check",cadence:"weekly",dueDow:0},
+      {id:"multi",name:"Multivitamin",type:"check"},{id:"vitc",name:"Vitamin C",type:"check"},
+      {id:"iron",name:"Iron",type:"check"},{id:"creatine",name:"Creatine",type:"check"}]},
+    {id:"home",label:"Home & Hygiene",items:[
+      {id:"brush",name:"Brush teeth",type:"count",target:2,step:1,unit:""},
+      {id:"face",name:"Wash face",type:"count",target:2,step:1,unit:""},
+      {id:"bath",name:"Bath",type:"check"},{id:"bed",name:"Organize bed",type:"check"},
+      {id:"clothes",name:"Organize clothes",type:"check"},{id:"org3",name:"Organize (other)",type:"check"}]},
+    {id:"food",label:"Food",items:[
+      {id:"paneer",name:"Paneer meals",type:"count",target:2,step:1,unit:""},
+      {id:"khichi",name:"Khichi meal",type:"check"},{id:"chicken",name:"Chicken meal",type:"check"},
+      {id:"milk",name:"Milk",type:"count",target:1.5,step:0.5,unit:"L"},
+      {id:"water",name:"Water",type:"count",target:1.5,step:0.5,unit:"L"},
+      {id:"coffee",name:"Morning coffee",type:"check"}]},
+    {id:"ex",label:"Exercise",items:[
+      {id:"cardio",name:"Cardio",type:"count",target:70,step:10,unit:"min"},
+      {id:"strength",name:"Strength",type:"count",target:50,step:10,unit:"min"}]},
+    {id:"recovery",label:"Recovery",items:[
+      {id:"sleep",name:"Sleep (10pm–6am)",type:"count",target:8,step:0.5,unit:"h"},
+      {id:"stretch",name:"Stretch / mobility",type:"count",target:10,step:5,unit:"min"}]},
+    {id:"mind",label:"Mind & Social",items:[
+      {id:"psych",name:"Overcome a psychological challenge",type:"check",cadence:"weekly",dueDow:0},
+      {id:"social",name:"Socialization",type:"check",cadence:"alt"}]},
+    {id:"job",label:"Job",items:[
+      {id:"jobwork",name:"Job work (budget)",type:"cap",target:5,step:0.5,unit:"h"}]},
+    {id:"work",label:"Work",items:[
+      {id:"deep",name:"Deep work",type:"count",target:150,step:30,unit:"min"},
+      {id:"revision",name:"Revision",type:"count",target:30,step:15,unit:"min"},
+      {id:"reading",name:"Reading",type:"count",target:60,step:15,unit:"min"},
+      {id:"youtube",name:"YouTube channel",type:"count",target:30,step:15,unit:"min"},
+      {id:"artic",name:"Articulation reps",type:"count",target:30,step:15,unit:"min"}]},
+  ];
+  const THRESH=0.8, DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const tfmt=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");return `${y}-${m}-${dd}`;};
+  const tadd=(s,n)=>{const[y,m,d]=s.split("-").map(Number);return tfmt(new Date(y,m-1,d+n));};
+  const tpretty=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});};
+  const tesc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const fmtNum=n=>Number.isInteger(n)?String(n):n.toFixed(1);
+  const targetOf=it=>it.type==="check"?1:it.target;
+  const isDue=(it,s)=>{const cad=it.cadence||"daily";if(cad==="daily")return true;const[y,m,d]=s.split("-").map(Number);
+    if(cad==="alt"){const dn=Math.floor(Date.UTC(y,m-1,d)/86400000);return dn%2===0;}
+    if(cad==="weekly")return new Date(y,m-1,d).getDay()===(it.dueDow??0);return true;};
+  const contrib=(it,v)=>{const val=v||0;if(it.type==="cap")return(val>0&&val<=it.target)?1:0;return Math.min(val,targetOf(it))/targetOf(it);};
+  const dayScore=(vals,items,s)=>{const due=items.filter(it=>isDue(it,s));if(!due.length)return 0;let e=0;for(const it of due)e+=contrib(it,vals?.[it.id]);return e/due.length;};
+
+  let today,date,days,custom,customSections,showAdd,showSection,addForm;
+  function initState(){today=tfmt(new Date());date=today;days={};custom=[];customSections=[];showAdd=false;showSection=false;
+    addForm={name:"",sectionId:"supp",type:"check",target:"1",unit:"min",step:"5",cadence:"daily"};}
+  initState();
+
+  async function loadFromDB(){
+    days={};custom=[];customSections=[];
+    const uid=session.user.id;
+    try{ const {data}=await sb.from("tracker_days").select("day,data").eq("user_id",uid);
+      (data||[]).forEach(r=>{days[r.day]=r.data||{};}); }catch(e){}
+    try{ const {data}=await sb.from("tracker_meta").select("sections,items").eq("user_id",uid).maybeSingle();
+      if(data){customSections=data.sections||[];custom=data.items||[];} }catch(e){}
+  }
+  async function saveDay(d){ try{ await sb.from("tracker_days").upsert({user_id:session.user.id,day:d,data:days[d]||{}},{onConflict:"user_id,day"}); }catch(e){} }
+  async function saveMeta(){ try{ await sb.from("tracker_meta").upsert({user_id:session.user.id,sections:customSections,items:custom},{onConflict:"user_id"}); }catch(e){} }
+
+  const allSecDefs=()=>[...SECTIONS,...customSections.map(s=>({...s,items:[]}))];
+  const secLabel=id=>{const s=allSecDefs().find(x=>x.id===id);return s?s.label:"";};
+  const merged=()=>allSecDefs().map(s=>({...s,items:[...(s.items||[]),...custom.filter(c=>c.sectionId===s.id)]}));
+  const allItems=()=>merged().flatMap(s=>s.items);
+  const itemById=id=>allItems().find(i=>i.id===id);
+
+  function setValue(id,v){v=Math.max(0,Math.round(v*100)/100);days[date]=days[date]||{};days[date][id]=v;saveDay(date);render();}
+  window.tkToggle=id=>{const cur=(days[date]||{})[id];setValue(id,cur?0:1);};
+  window.tkBump=(id,dir)=>{const it=itemById(id);const cur=(days[date]||{})[id]||0;setValue(id,cur+dir*it.step);};
+  window.tkNum=(id,raw)=>{const n=parseFloat(raw);setValue(id,isNaN(n)?0:n);};
+  window.tkPrev=()=>{date=tadd(date,-1);render();};
+  window.tkNext=()=>{if(date!==today){date=tadd(date,1);render();}};
+  window.tkReset=()=>{days[date]={};saveDay(date);render();};
+  window.tkOpenAdd=()=>{showAdd=true;showSection=false;render();};
+  window.tkCloseAdd=()=>{showAdd=false;render();};
+  window.tkAf=(k,v)=>{addForm[k]=v;render();};
+  window.tkSubmitAdd=()=>{const f=addForm,needs=(f.type==="count"||f.type==="cap");if(!f.name.trim())return;
+    if(needs&&!(parseFloat(f.target)>0&&parseFloat(f.step)>0))return;
+    const def={id:"c_"+Date.now(),name:f.name.trim(),sectionId:f.sectionId,type:f.type,custom:true};
+    if(needs){def.target=parseFloat(f.target);def.step=parseFloat(f.step);def.unit=f.unit.trim();}
+    if(f.cadence!=="daily")def.cadence=f.cadence;custom.push(def);saveMeta();
+    addForm={name:"",sectionId:f.sectionId,type:"check",target:"1",unit:"min",step:"5",cadence:"daily"};render();};
+  window.tkRemoveCustom=id=>{custom=custom.filter(c=>c.id!==id);saveMeta();render();};
+  window.tkOpenSection=()=>{showSection=true;showAdd=false;render();};
+  window.tkCloseSection=()=>{showSection=false;render();};
+  window.tkSubmitSection=()=>{const inp=document.getElementById("tkNewSec");const name=(inp?inp.value:"").trim();if(!name)return;
+    customSections.push({id:"s_"+Date.now(),label:name,custom:true});saveMeta();showSection=false;render();};
+  window.tkRemoveSection=id=>{customSections=customSections.filter(s=>s.id!==id);custom=custom.filter(c=>c.sectionId!==id);
+    if(addForm.sectionId===id)addForm.sectionId="supp";saveMeta();render();};
+
+  function cadPill(it,due){if(!it.cadence||it.cadence==="daily")return "";
+    let txt=it.cadence==="weekly"?("weekly · "+DOW[it.dueDow??0]):"alt day";if(!due)txt="not due today";
+    return `<span class="pill ${due?"":"off"}">${txt}</span>`;}
+  function checkRow(it,due){const v=(days[date]||{})[it.id],on=!!v;
+    return `<div class="trow ${due?"":"muted"}"><button class="chk" onclick="tkToggle('${it.id}')">
+      <span class="box ${on?"on":""}">✓</span><span class="nm ${on?"done":""}">${tesc(it.name)}</span>${cadPill(it,due)}</button></div>`;}
+  function countRow(it,due){const v=(days[date]||{})[it.id]||0,isCap=it.type==="cap",over=isCap&&v>it.target,
+    hit=isCap?(v>0&&v<=it.target):v>=it.target,cls=over?"bad":(hit?"ok":"");
+    return `<div class="trow ${due?"":"muted"}"><div class="cinfo"><span class="nm">${tesc(it.name)} ${cadPill(it,due)}</span>
+      <div class="crow"><input class="cval ${cls}" inputmode="decimal" value="${fmtNum(v)}" onchange="tkNum('${it.id}',this.value)" aria-label="${tesc(it.name)}">
+      <span class="ctgt">${isCap?"≤ ":"/ "}${it.target} ${it.unit||""}</span>
+      ${over?`<span class="cover">over by ${fmtNum(v-it.target)} ${it.unit||""}</span>`:""}</div></div>
+      <div class="steps"><button class="st" onclick="tkBump('${it.id}',-1)">−</button>
+      <button class="st plus ${hit?"hit":""}" onclick="tkBump('${it.id}',1)">+</button></div></div>`;}
+  function ring(pct){const r=26,c=2*Math.PI*r,off=c-(pct/100)*c;
+    return `<svg width="72" height="72" viewBox="0 0 72 72" style="flex:0 0 auto">
+      <circle cx="36" cy="36" r="${r}" fill="none" stroke="#e5e5e5" stroke-width="7"/>
+      <circle cx="36" cy="36" r="${r}" fill="none" stroke="#4f46e5" stroke-width="7" stroke-linecap="round"
+        stroke-dasharray="${c}" stroke-dashoffset="${off}" transform="rotate(-90 36 36)" style="transition:stroke-dashoffset .35s ease"/></svg>`;}
+  function addPanel(){
+    const secs=allSecDefs().map(s=>`<option value="${s.id}" ${addForm.sectionId===s.id?"selected":""}>${tesc(s.label)}</option>`).join("");
+    const needs=(addForm.type==="count"||addForm.type==="cap");
+    const valid=addForm.name.trim()&&(!needs||(parseFloat(addForm.target)>0&&parseFloat(addForm.step)>0));
+    const numFields=needs?`<div class="frow">
+      <div><label class="flab">Target</label><input class="fld" inputmode="decimal" value="${tesc(addForm.target)}" onchange="tkAf('target',this.value)"></div>
+      <div><label class="flab">Unit</label><input class="fld" value="${tesc(addForm.unit)}" placeholder="min / h / L" onchange="tkAf('unit',this.value)"></div>
+      <div><label class="flab">Step</label><input class="fld" inputmode="decimal" value="${tesc(addForm.step)}" onchange="tkAf('step',this.value)"></div></div>`:"";
+    const clist=custom.length?`<div class="clist"><div class="t">Your added activities</div>
+      ${custom.map(c=>`<div class="citem"><span>${tesc(c.name)} <small>· ${tesc(secLabel(c.sectionId))}</small></span>
+        <button onclick="tkRemoveCustom('${c.id}')">remove</button></div>`).join("")}</div>`:"";
+    return `<div class="tpanel"><button class="close" onclick="tkCloseAdd()">×</button><h3>New activity</h3>
+      <input class="fld" placeholder="Activity name (e.g. Journal)" value="${tesc(addForm.name)}" onchange="tkAf('name',this.value)">
+      <div class="frow"><select class="fld" onchange="tkAf('sectionId',this.value)">${secs}</select>
+        <select class="fld" onchange="tkAf('type',this.value)">
+          <option value="check" ${addForm.type==="check"?"selected":""}>Checkbox</option>
+          <option value="count" ${addForm.type==="count"?"selected":""}>Count / duration</option>
+          <option value="cap" ${addForm.type==="cap"?"selected":""}>Budget (stay under)</option></select></div>
+      <select class="fld" onchange="tkAf('cadence',this.value)">
+        <option value="daily" ${addForm.cadence==="daily"?"selected":""}>Every day</option>
+        <option value="alt" ${addForm.cadence==="alt"?"selected":""}>Every other day</option>
+        <option value="weekly" ${addForm.cadence==="weekly"?"selected":""}>Weekly</option></select>
+      ${numFields}<button class="tprimary" ${valid?"":"disabled"} onclick="tkSubmitAdd()">Add activity</button>${clist}</div>`;}
+  function sectionPanel(){
+    const list=customSections.length?`<div class="clist"><div class="t">Your sections</div>
+      ${customSections.map(s=>`<div class="citem"><span>${tesc(s.label)}</span>
+        <button onclick="tkRemoveSection('${s.id}')">remove</button></div>`).join("")}</div>`:"";
+    return `<div class="tpanel"><button class="close" onclick="tkCloseSection()">×</button><h3>New section</h3>
+      <input class="fld" id="tkNewSec" placeholder="Section name (e.g. Finance)">
+      <p class="thint">Create the section, then use “+ Add activity” to fill it.</p>
+      <button class="tprimary" onclick="tkSubmitSection()">Create section</button>${list}</div>`;}
+  function render(){
+    const items=allItems(),vals=days[date]||{},pct=Math.round(dayScore(vals,items,date)*100);
+    let streak=0,cur=date;while(dayScore(days[cur]||{},items,cur)>=THRESH){streak++;cur=tadd(cur,-1);}
+    const isToday=date===today;
+    const secHtml=merged().map(sec=>{const hasItems=sec.items.length>0;
+      const due=sec.items.filter(it=>isDue(it,date));const done=due.reduce((a,it)=>a+contrib(it,vals[it.id]),0);
+      const sp=due.length?Math.round(done/due.length*100):100;
+      const rows=hasItems?sec.items.map(it=>{const d=isDue(it,date);return it.type==="check"?checkRow(it,d):countRow(it,d);}).join("")
+        :`<div class="trow muted" style="justify-content:center;color:var(--tmut);font-size:13px">No activities yet</div>`;
+      return `<div class="sec"><div class="sec-h"><h2>${tesc(sec.label)}</h2><span class="mono">${hasItems?sp+"%":"—"}</span></div>
+        <div class="tlist">${rows}</div></div>`;}).join("");
+    document.getElementById("trackerView").innerHTML=`
+      <div class="thead"><button class="nav" onclick="tkPrev()">‹</button>
+        <div class="hdate"><b>${isToday?"Today":tpretty(date)}</b>${isToday?`<small class="mono">${tpretty(date)}</small>`:""}</div>
+        <button class="nav" onclick="tkNext()" ${isToday?"disabled":""}>›</button></div>
+      <div class="prog">${ring(pct)}<div><div class="pct mono">${pct}%</div><div class="lbl">of due targets met</div>
+        <div class="stk"><b class="mono">${streak}</b> day streak</div></div><button class="reset" onclick="tkReset()">reset</button></div>
+      ${secHtml}
+      ${showAdd?addPanel():showSection?sectionPanel():`
+        <button class="addbtn" onclick="tkOpenAdd()">+ Add activity</button>
+        <button class="addbtn" style="margin-top:10px" onclick="tkOpenSection()">+ New section</button>`}
+      <div class="tfoot">Synced to your account · use ‹ › to change day</div>`;}
+
+  return {
+    mount: async()=>{ await loadFromDB(); render(); },
+    render,
+    reset: ()=>{ initState(); const el=document.getElementById("trackerView"); if(el) el.innerHTML=""; }
+  };
+})();
+
 // ================= tabs =================
 function switchTo(key){
   cur=key; editingId=null; activeTag=null; selectedTags=new Set();
   document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.tab===key));
+  if(key==="tracker"){
+    $("pairView").hidden=true; $("trackerView").hidden=false;
+    if(!trackerMounted){ trackerMounted=true; Tracker.mount(); } else { Tracker.render(); }
+    return;
+  }
+  $("trackerView").hidden=true; $("pairView").hidden=false;
   $("search").value=""; $("search").placeholder=C().search;
   renderForm(); resetForm(); render();
 }
